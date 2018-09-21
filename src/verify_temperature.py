@@ -1,11 +1,35 @@
 #!/usr/bin/env python
 
+## @file verify_temperature
+#  this program will help grade students' temperature conversions
+#
+#  @author Wes Dean <Wesley.Dean@kdaweb.com>
+#  @details
+#
+
 import re
 import sys
 
+
 class Temperature:
+	"""!@brief this is the base / parent class for *Temperature classes
+  @details
+  The Temperature class is designed to be overridden by *Temperature
+  classes.  We store the temperature values on the Rankine scale 
+  for simplicity of comparison; we also provide accessor methods to
+  retrieve temperatures on different scales.
+  """
+
 	def __init__ (self, value):
+		"""!@brief create a new Temperature object
+		"""
 		self._value = value
+
+	def __eq__(self, other):
+		return self.normalize() == other.normalize()
+
+	def __str__(self):
+		return self.normalize()
 
 	def toRankine(self):
 		return self._value
@@ -19,6 +43,8 @@ class Temperature:
 	def toFarenheit(self):
 		return self._value - 459.67
 
+	def normalize(self):
+		return str('%.0f' % (round (self.toRankine() * 10) / 10))
 
 class FarenheitTemperature(Temperature):
 	def __init__(self, value):
@@ -54,28 +80,30 @@ def parse_temperature(string):
 	else:
 		raise 'invalid units'
 
-teacher_value = str(sys.argv[1])
-teacher_units = str(sys.argv[2])
-student_units = str(sys.argv[3])
-student_value = str(sys.argv[4])
 
-teacher_string = teacher_value + ' ' + teacher_units
-student_string = student_value + ' ' + student_units
+def verify_temperature(teacher_units, teacher_value, student_units, student_value):
 
-try:
-	teacher_temperature = parse_temperature(teacher_string)
-except:
-	print 'invalid'
-	sys.exit()
+	teacher_string = teacher_value + ' ' + teacher_units
+	student_string = student_value + ' ' + student_units
 
-try:
-	student_temperature = parse_temperature(student_string)
-except:
-	print 'incorrect'
-	sys.exit()
+	try:
+		teacher_temperature = parse_temperature(teacher_string)
+	except:
+		return 'invalid'
 
-if ('student: %.0f' % (round (teacher_temperature.toRankine() * 10) / 10)
-	== 'student: %.0f' % (round (student_temperature.toRankine() * 10) / 10)):
-		print 'correct'
-else:
-	print 'incorrect'
+	try:
+		student_temperature = parse_temperature(student_string)
+	except:
+		return 'incorrect'
+
+	if (teacher_temperature == student_temperature):
+			return 'correct'
+	else:
+		return 'incorrect'
+
+print verify_temperature(
+	teacher_value = str(sys.argv[1]),
+	teacher_units = str(sys.argv[2]),
+	student_units = str(sys.argv[3]),
+	student_value = str(sys.argv[4]))
+
