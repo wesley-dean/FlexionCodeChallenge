@@ -1,0 +1,27 @@
+---
+# tasks file for fcc
+
+- name: install packages
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - git
+    - python27-pip
+
+- name: install application
+  become: yes
+  git:
+    repo: 'https://github.com/wesley-dean/FlexionCodeChallenge.git'
+    dest: '/application/'
+
+- name: install requirements
+  become: yes
+  shell: >
+    pip install -r /application/requirements.txt
+
+- name: make it accessible by anyone
+  become: yes
+  shell: "chmod -R ug=rwX,o=rX /application/"
+
