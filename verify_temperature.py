@@ -91,12 +91,12 @@ def verify_temperature(teacher_string, student_string):
 	try:
 		student_temperature = parse_temperature(student_string)
 	except:
-		return 'Incorrect'
+		return 'incorrect'
 
 	if (teacher_temperature == student_temperature):
 			return 'correct'
 	else:
-		return 'Incorrect'
+		return 'incorrect'
 
 app = Flask(__name__)
 
