@@ -1,10 +1,11 @@
 before_script:
-  - curl https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip > /tmp/terraform.zip
-  - cd /tmp && unzip terraform.zip
-  - sudo cp /tmp/terraform /usr/local/bin/terraform.io
-  - curl https://releases.hashicorp.com/packer/1.3.1/packer_1.3.1_linux_amd64.zip > /tmp/packer.zip
-  - cd /tmp && unzip packer.zip
-  - sudo cp /tmp/packer /usr/local/bin/packer.io
+  - curl https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip > terraform.zip
+  - unzip terraform.zip
+  - sudo cp terraform /usr/local/bin/terraform.io
+  - curl https://releases.hashicorp.com/packer/1.3.1/packer_1.3.1_linux_amd64.zip > packer.zip
+  - unzip packer.zip
+  - sudo cp packer /usr/local/bin/packer.io
+  - sudo pip install pip --upgrade
   - sudo pip install ansible --upgrade
 jobs:
   include:
