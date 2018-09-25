@@ -1,0 +1,45 @@
+{
+  "variables": {
+    "access_key": "{{ env `access_key` }}",
+    "secret_key": "{{ env `secret_key` }}",
+    "region": "{{ env `region` }}",
+    "instance_type": "{{ env `instance_type`}}",
+    "source_ami": "{{ env `source_ami` }}",
+    "aws_ssh_username": "{{ env `aws_ssh_username` }}",
+    "device_name": "{{ env `device_name` }}",
+    "volume_size": "{{ env `volume_size` }}",
+    "ami_name": "{{ env `ami_name` }}",
+    "platform": "{{ env `platform` }}",
+    "port": "{{ env `port` }}",
+    "extravars": "{{ env `extravars` }}"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{ user `access_key` }}",
+      "secret_key": "{{ user `secret_key` }}",
+      "region": "{{ user `region` }}",
+      "instance_type": "{{ user `instance_type` }}",
+      "source_ami": "{{ user `source_ami` }}",
+      "ami_name": "{{ user `ami_name` }}",
+      "ssh_username": "{{ user `aws_ssh_username` }}",
+      "ssh_pty": true,
+      "force_deregister": true,
+      "force_delete_snapshot": true,
+      "launch_block_device_mappings": [
+        {
+          "device_name": "{{ user `device_name` }}",
+          "volume_size": "{{ user `volume_size` }}",
+          "volume_type": "gp2",
+          "delete_on_termination": true
+        }
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "site.yml"
+    }
+  ]
+}
