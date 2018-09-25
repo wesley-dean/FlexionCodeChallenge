@@ -9,7 +9,7 @@
 
 import re
 import sys
-
+from flask import Flask, request, render_template
 
 class Temperature:
 	"""!@brief this is the base / parent class for *Temperature classes
@@ -81,10 +81,7 @@ def parse_temperature(string):
 		raise 'invalid units'
 
 
-def verify_temperature(teacher_units, teacher_value, student_units, student_value):
-
-	teacher_string = teacher_value + ' ' + teacher_units
-	student_string = student_value + ' ' + student_units
+def verify_temperature(teacher_string, student_string):
 
 	try:
 		teacher_temperature = parse_temperature(teacher_string)
@@ -101,9 +98,21 @@ def verify_temperature(teacher_units, teacher_value, student_units, student_valu
 	else:
 		return 'incorrect'
 
-print verify_temperature(
-	teacher_value = str(sys.argv[1]),
-	teacher_units = str(sys.argv[2]),
-	student_units = str(sys.argv[3]),
-	student_value = str(sys.argv[4]))
+app = Flask(__name__)
 
+@app.route('/')
+def home():
+  return render_template('index.html.j2')
+
+@app.route('/verify', methods=['GET', 'POST'])
+def verify():
+  error = None
+  teacher_string = request.form['teacher_string']
+  student_string = request.form['student_value'] + ' ' + request.form['student_units']
+
+  verify_temperature_result = verify_temperature (
+                             teacher_string = teacher_string,
+                             student_string = student_string)
+
+  return render_template ('verify.html.j2',
+  result=verify_temperature_result)
