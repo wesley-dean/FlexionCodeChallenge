@@ -52,7 +52,7 @@ class FarenheitTemperature(Temperature):
 
 class CelsiusTemperature(Temperature):
 	def __init__(self,value):
-		Temperature.__init__(self, (value + 273.15) * (9 / 5))
+		Temperature.__init__(self, (value + 273.15) * 9 / 5)
 
 class RankineTemperature(Temperature):
 	def __init__(self, value):
@@ -60,7 +60,7 @@ class RankineTemperature(Temperature):
 
 class KelvinTemperature(Temperature):
 	def __init__(self, value):
-		Temperature.__init__(self, value * (9 / 5))
+		Temperature.__init__(self, value * 9 / 5)
 
 def parse_temperature(string):
 
