@@ -1,0 +1,6 @@
+jobs:
+  include:
+    - stage: build
+      script: make ami
+    - stage: deploy
+      script: make live
