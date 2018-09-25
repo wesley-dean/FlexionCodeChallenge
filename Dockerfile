@@ -1,6 +1,6 @@
 FROM python:2.7-alpine
 
-ENV directory /app
+ENV directory /application
 ENV port 5000
 
 RUN mkdir -p $directory
@@ -17,4 +17,4 @@ RUN git clone https://github.com/wesley-dean/FlexionCodeChallenge.git $directory
 RUN pip install --requirement requirements.txt --upgrade
 
 # run the executable
-CMD port=$port /app/verify_temperature.bash
+CMD port=$port /$directory/verify_temperature.bash
