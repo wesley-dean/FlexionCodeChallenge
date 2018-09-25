@@ -71,6 +71,7 @@ ami:
 	packer build $(debug_flag) $(verbose_flag) --only=amazon-ebs $(packerfile)
 
 live:
+	$(TERRAFORM) init &&
 	$(TERRAFORM) plan -out=tfplan -input=false \
 	-var port=$(port) && \
 	$(TERRAFORM) apply -input=false tfplan

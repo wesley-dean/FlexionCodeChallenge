@@ -1,39 +1,3 @@
-variable "port" {
-  default = "80"
-}
-
-provider "aws" {
-  region = "us-east-1"
-}
-
-data "aws_vpc" "default" {
-  default = true
-}
-
-data "aws_subnet" "default" {
-  vpc_id = "${data.aws_vpc.default.id}"
-  availability_zone = "us-east-1b"
-  default_for_az = true
-}
-
-data "aws_ami" "fcc_ami" {
-  most_recent = true
-
-  filter {
-    name = "owner-id"
-    values = ["688772714249"]
-  }
-  
-  filter {
-    name = "name"
-    values = ["flexioncodechallenge"]
-  }
-}
-
-data "aws_route53_zone" "primary" {
-  name = "kdaweb.com."
-}
-
 resource "aws_security_group" "fcc" {
   name = "allow port incoming traffic"
 
@@ -65,7 +29,7 @@ resource "aws_instance" "fcc" {
 
 resource "aws_route53_record" "fcc" {
   zone_id = "${data.aws_route53_zone.primary.zone_id}"
-  name    = "fcc.kdaweb.com"
+  name    = "${var.hostname}.${var.domain}"
   type    = "A"
   ttl     = "30"
   records = ["${aws_instance.fcc.public_ip}"]
