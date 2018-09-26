@@ -27,7 +27,7 @@ resource "aws_security_group" "fcc" {
 
 resource "aws_instance" "fcc" {
   ami                    = "${data.aws_ami.fcc_ami.image_id}"
-  instance_type          = "t2.micro"
+  instance_type          = "${var.instance_type}"
   user_data              = "#!/bin/bash\ncd /application/ && sudo port=${var.port} envrionment=${var.environment} ./verify_temperature.bash\n"
   vpc_security_group_ids = ["${aws_security_group.fcc.id}"]
 

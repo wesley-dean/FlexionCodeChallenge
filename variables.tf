@@ -66,3 +66,10 @@ variable "region" {
   default     = "us-east-1"
   description = "the region where the magic happens"
 }
+
+# this is the instance type we'll be creating
+
+variable "instance_type" {
+  default     = "t2.micro"
+  description = "the type of EC2 instance to use"
+}

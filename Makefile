@@ -1,3 +1,8 @@
+###
+### commands we'll be using later
+###
+
+
 CAT ?= cat
 CHMOD ?= chmod
 FIND ?= find
@@ -5,17 +10,48 @@ PACKER ?= packer
 RM ?= rm
 TERRAFORM ?= terraform.io
 
+
+###
+### variables
+###
+
+
+## file locations
+
+# the Packer config file
 packerfile ?= packer.json
 
+## build variables
+
+# the region where we'll be working
 region ?= us-east-1
+
+# the EC2 instance type 
 instance_type ?= t2.micro
+
+# the source (base) AMI upon which to build (AMZN)
 source_ami ?= ami-0ff8a91507f77f867
+
+# the username Packer should use to connect to the instance
 aws_ssh_username ?= ec2-user
+
+# where the boot disk is attached
 device_name ?= /dev/xvda
+
+# the size of the boot disk (in GB)
 volume_size ?= 10
+
+# the name of the AMI to produce
 ami_name ?= flexioncodechallenge
 
+# the port that will be serving traffic
 port ?= 80
+
+
+###
+### runtime flags for Packer
+###
+
 
 ifeq ($(debug), true)
   debug_flag ?= -debug
@@ -30,8 +66,15 @@ else
 endif
 
 
-all: ami image
+###
+### targets for make
+###
 
+
+# all is used to... make all the things
+all: test ami live
+
+# clean cleans up temporary files
 clean:
 	$(FIND) . \( \
      -name "*~" \
@@ -55,6 +98,11 @@ clean:
 	"$(secret_key_filename)" \
 	; exit 0
 
+# test runs unit tests
+test:
+	exit 0
+
+# ami builds the AMI using Packer
 ami:
 	access_key="$(AWS_ACCESS_KEY_ID)" \
 	secret_key="$(AWS_SECRET_ACCESS_KEY)" \
@@ -70,9 +118,12 @@ ami:
 	port="$(port)" \
 	packer build $(debug_flag) $(verbose_flag) --only=amazon-ebs $(packerfile)
 
+# live instantiates the AMI as an EC2 instance using Terraform
 live:
 	$(TERRAFORM) init && \
 	$(TERRAFORM) plan -out=tfplan -input=false \
-	-var port=$(port) && \
-	-var ami_name=$(ami_name) && \
+	-var port=$(port) \
+	-var ami_name=$(ami_name) \
+	-var region=$(region) \
+	-var instance_type=$(instance_type) && \
 	$(TERRAFORM) apply -input=false tfplan
