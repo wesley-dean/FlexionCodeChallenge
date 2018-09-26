@@ -57,6 +57,23 @@ application_location = /application/
 # the serving environment for the application
 environment ?= development
 
+# the name of the application
+application ?= fcc
+
+# the S3 bucket where we'll store remote state (THIS NEEDS TO EXIST FIRST)
+remote-state-bucket ?= com.kdaweb.terraform-remote-state
+
+# the domainname / Route53 zone to use (THIS NEEDS TO EXIST FIRST)
+domain ?= kdaweb.com
+
+# the hostname to use
+hostname ?= $(application)
+
+# the current owner of the produced AMI
+owner ?= 688772714249
+
+# security group we'll be using
+sgs ?= sg-00fbabd161fd1dc5f
 
 ###
 ### runtime flags for Packer
@@ -139,5 +156,11 @@ live:
 	-var region=$(region) \
 	-var application_location=$(application_location) \
 	-var environment=$(environment) \
+	-var application=$(application) \
+	-var remote-state-bucket=$(remote-state-bucket) \
+	-var domain=$(domain) \
+	-var hostname=$(hostname) \
+	-var owner=$(owner) \
+	-var sgs=$(sgs) \
 	-var instance_type=$(instance_type) && \
 	$(TERRAFORM) apply -input=false tfplan
