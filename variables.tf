@@ -82,6 +82,6 @@ variable "application_location" {
 }
 
 variable "sgs" {
-  default = ["sg-00fbabd161fd1dc5f"]
+  default = "sg-00fbabd161fd1dc5f"
   description = "web-only SG for port 80"
 }
