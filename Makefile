@@ -74,4 +74,5 @@ live:
 	$(TERRAFORM) init && \
 	$(TERRAFORM) plan -out=tfplan -input=false \
 	-var port=$(port) && \
+	-var ami_name=$(ami_name) && \
 	$(TERRAFORM) apply -input=false tfplan

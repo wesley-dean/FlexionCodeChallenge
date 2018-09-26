@@ -7,35 +7,34 @@ resource "aws_security_group" "fcc" {
   name = "allow port incoming traffic"
 
   ingress {
-    from_port = 0
-    to_port = "${var.port}"
-    protocol = "tcp"
+    from_port   = 0
+    to_port     = "${var.port}"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
 
 # now that we have a Security Group we can use, let's create an EC2 instance
 # that uses the AMI we queried before and use 'user_data' to start the
 # Flask development server at startup
 
 resource "aws_instance" "fcc" {
-  ami = "${data.aws_ami.fcc_ami.image_id}"
-  instance_type = "t2.micro"
-  user_data = "#!/bin/bash\ncd /application/ && sudo port=${var.port} ./verify_temperature.bash\n"
+  ami                    = "${data.aws_ami.fcc_ami.image_id}"
+  instance_type          = "t2.micro"
+  user_data              = "#!/bin/bash\ncd /application/ && sudo port=${var.port} envrionment=${var.environment} ./verify_temperature.bash\n"
   vpc_security_group_ids = ["${aws_security_group.fcc.id}"]
+
   tags {
-    Name = "fcc"
+    Name = "${var.application}"
   }
 }
-
 
 # finally, we also want to associate a DNS hostname (an alias created
 # through Route53) that points to the public IP address of the EC2 instance
