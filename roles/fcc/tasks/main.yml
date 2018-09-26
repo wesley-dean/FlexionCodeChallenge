@@ -6,22 +6,23 @@
   package:
     name: "{{ item }}"
     state: installed
-  with_items:
-    - git
-    - python27-pip
+  with_items: "{{ fcc_packages }}"
+
 
 - name: install application
   become: yes
   git:
-    repo: 'https://github.com/wesley-dean/FlexionCodeChallenge.git'
-    dest: '/application/'
+    repo: '{{ fcc_repo_location }}'
+    dest: '{{ fcc_application_location }}'
+
 
 - name: install requirements
   become: yes
   shell: >
-    pip install -r /application/requirements.txt
+    pip install -r {{ fcc_application_location }}/requirements.txt
+
 
 - name: make it accessible by anyone
   become: yes
-  shell: "chmod -R ug=rwX,o=rX /application/"
+  shell: "chmod -R ug=rwX,o=rX {{ fcc_application_location }}"
 

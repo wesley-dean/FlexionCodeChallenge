@@ -1,2 +1,12 @@
 ---
 # defaults file for fcc
+
+application_location: "/application/"
+
+fcc_packages:
+    - git
+    - python27-pip
+
+fcc_repo_location: "https://github.com/wesley-dean/FlexionCodeChallenge.git"
+
+fcc_application_location: "{{ application_location }}"

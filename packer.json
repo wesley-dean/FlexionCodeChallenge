@@ -11,6 +11,8 @@
     "ami_name": "{{ env `ami_name` }}",
     "platform": "{{ env `platform` }}",
     "port": "{{ env `port` }}",
+    "environment": "{{ env `environment` }}",
+    "application_location": "{{ env `application_location` }}",
     "extravars": "{{ env `extravars` }}"
   },
   "builders": [
@@ -39,7 +41,10 @@
   "provisioners": [
     {
       "type": "ansible",
-      "playbook_file": "site.yml"
+      "playbook_file": "site.yml",
+      "extra_arguments": [
+        "--extra-vars", "application_location={{ user `application_location` }} environment={{ user `environment` }} port={{ user `port` }}"
+      ]
     }
   ]
 }

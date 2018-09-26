@@ -7,6 +7,7 @@ CAT ?= cat
 CHMOD ?= chmod
 FIND ?= find
 PACKER ?= packer
+PYTHON ?= python
 RM ?= rm
 TERRAFORM ?= terraform.io
 
@@ -20,6 +21,9 @@ TERRAFORM ?= terraform.io
 
 # the Packer config file
 packerfile ?= packer.json
+
+# executable for testing
+executable ?= verify_temperature.py
 
 ## build variables
 
@@ -46,6 +50,12 @@ ami_name ?= flexioncodechallenge
 
 # the port that will be serving traffic
 port ?= 80
+
+# where the application will live
+application_location = /application/
+
+# the serving environment for the application
+environment ?= development
 
 
 ###
@@ -100,7 +110,7 @@ clean:
 
 # test runs unit tests
 test:
-	exit 0
+	$(PYTHON) $(executable)
 
 # ami builds the AMI using Packer
 ami:
@@ -116,6 +126,8 @@ ami:
 	platform="amazon-ebs" \
 	extravars="$(extravars)" \
 	port="$(port)" \
+	environment="$(environment)" \
+	application_location="$(application_location)" \
 	packer build $(debug_flag) $(verbose_flag) --only=amazon-ebs $(packerfile)
 
 # live instantiates the AMI as an EC2 instance using Terraform
@@ -125,5 +137,7 @@ live:
 	-var port=$(port) \
 	-var ami_name=$(ami_name) \
 	-var region=$(region) \
+	-var application_location=$(application_location) \
+	-var environment=$(environment) \
 	-var instance_type=$(instance_type) && \
 	$(TERRAFORM) apply -input=false tfplan

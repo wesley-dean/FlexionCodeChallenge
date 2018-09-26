@@ -9,6 +9,8 @@ before_script:
   - sudo pip install ansible --upgrade
 jobs:
   include:
+    - stage: test
+      script: make test
     - stage: build
       script: make ami
     - stage: deploy

@@ -73,3 +73,10 @@ variable "instance_type" {
   default     = "t2.micro"
   description = "the type of EC2 instance to use"
 }
+
+# this is where teh application will live
+
+variable "application_location" {
+  default = "/application/"
+  description = "where the application will live"
+}
